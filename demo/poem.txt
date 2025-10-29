@@ -1,0 +1,4 @@
+Roses are red,
+Violets are blue,
+Git makes us happy,
+Especially when it's new.
