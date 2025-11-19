@@ -35,15 +35,28 @@ git 常用命令列表：
 | 序号 | 命令 | 释义 | 备注 |
 | ---- | ---- | ---- | ---- |
 |0|git --version|查看当前git版本||
-|1|git config --list|查看配置信息|使用“**git config --global \<parameter-name> \<parameter-value>**”命令进行编辑配置信息|
-|2|git clone <project-url>|从远程仓库克隆项目到本地||
-|3|git switch -c <branch-name>|创建并切换一个新分支|与git旧版本命令“**git checkout -b \<branch-name>**”效果相同|
-|4|git add <file-name> [<file-name2>]|添加文件到暂存区|其中参数中"."(所有)、"*"(通配)、"?"(单字符匹配)等都有相应含义，示例：“**git add .**”|
-|5|git commit -m 'commit message'|将暂存区更改提交到本地仓库||
-|6|git pull origin <branch-name>|拉取远程最新更改|可简化为“**git pull**”拉取跟踪的分支|
-|7|git push origin <branch-name>|将本地更改推送到远程仓库|1.可简化为“**git push**”推送到跟踪分支<br />2.首次推送到远程并建立关联“**git push -u origin \<branch-name>** ”|
-|8||||
-|9||||
+|1|git config --list|查看所有配置信息（包含全局+仓库+系统）|1.查看指定配置项：**git config \<parameter-name>**，例如：git config user.name。<br />2.区分层级查看配置项：**git config [--global/--system/--local] --list**，例如查看全局配置项：git config --global --list，其他“system”表示需要管理员权限的系统配置项，“local”表示当前默认仓库配置。<br />|
+|2|git config [--global/--system/--local] \<parameter-name> \<parameter-value>|设置配置项信息，可省略默认的local仓库级别|1.设置配置项信息示例：git config --global user.name "你的用户名"。<br />2.删除配置项信息：**git config [--global/--system/--local] --unset \<parameter-name> **。<br />3.手动修改编辑配置文件：**git config [--global/--system/--local] --edit**。<br />4.优先级：**仓库级（local） > 全局级（global） > 系统级（system）**，即同一配置项，仓库级会覆盖全局 / 系统级。|
+|3|git clone \<project-url>|将远程仓库克隆到本地||
+||git switch -c \<new-branch-name>|创建并切换一个新分支|与git旧版本命令“**git checkout -b \<new-branch-name>**”效果相同。|
+||git switch \<branch-name>|切换到一个分支|与git旧版本命令“**git checkout \<branch-name>**”效果相同。|
+||git add \<file-name> [\<file-name2>]|添加文件到暂存区|其中参数中"."(所有)、"*"(通配)、"?"(单字符匹配)等都有相应含义，示例：“**git add .**”、“**git add *.md**”、"**git add m?.txt**"。|
+||git commit -m 'commit message'|将暂存区更改提交到本地仓库，并添加提交信息||
+||git pull origin \<branch-name>|拉取远程最新更改|可简化为“**git pull**”拉取跟踪的分支。|
+||git push origin \<branch-name>|将本地更改推送到远程仓库|1.可简化为“**git push**”推送到跟踪分支。<br />2.首次推送到远程并建立关联“**git push -u origin \<branch-name>** ”。|
+||git merge \<target-feature-name>|将目标分支自动合并到当前所在分支|合并feature/login分支到当前在main分支的命令示例：git merge feature/login。|
+||git merge --abort|中止/放弃合并，恢复到合并前的干净状态||
+||git branch||git branch -v  区别|
+||git branch -d/-D||git push origin --delete new-feature|
+|||||
+|||||
+|||||
+|||||
+|||||
+|||||
+|||||
+|||||
+|||||
 
 
 
@@ -80,8 +93,6 @@ git restore --staged .
 git revert <commit-hash>
 
 git fetch <远程仓库> <远程分支>   # 拉取远程更新到本地
-
-git merge origin/<远程分支>       # 自动合并到当前本地分支
 
 git branch -d <分支名>  |  git branch -D <分支名>
 
