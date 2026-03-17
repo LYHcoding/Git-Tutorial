@@ -64,7 +64,7 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
     <tr>
         <td>git config [--global/--system/--local] &lt;parameter-name&gt; &lt;parameter-value&gt;</td>
         <td>设置配置项信息，可省略默认的local仓库级别</td>
-        <td>1. 设置配置项信息示例：git config --global user.name "你的用户名"。<br />2. 删除配置项信息：<strong>git config [--global/--system/--local] --unset &lt;parameter-name&gt;</strong>。<br />3. 手动修改编辑配置文件：git config [--global/--system/--local] --edit。<br />4. 优先级：<strong>仓库级（local） &gt; 全局级（global） &gt; 系统级（system）</strong>，即同一配置项，仓库级会覆盖全局 / 系统级。</td>
+        <td>1. 设置配置项信息示例：git config --global user.name "你的用户名"。<br />2. 删除配置项信息：<strong>git config [--global/--system/--local] --unset &lt;parameter-name&gt;</strong>。<br />3. 手动修改编辑配置文件：git config [--global/--system/--local] --edit。<br />4. 优先级：<strong>仓库级（local） &gt; 全局级（global） &gt; 系统级（system）</strong>，即同一配置项，仓库级会覆盖全局 / 系统级。<br />5. 配置命令别名：<strong>git config --global alias.ci commit</strong>（后续可执行git ci -m "提交信息"替代git commit）。<br />6. 仓库级配置文件路径：<strong>.git/config</strong>（本地仓库根目录下，存储当前仓库专属配置）。</td>
     </tr>
     <tr>
         <td align="center">2</td>
@@ -245,8 +245,8 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
         <td>1. 删除最近一次：git stash drop（等价git stash drop stash@{0}）。<br />2. 删除指定快照：<strong>git stash drop stash@{1}</strong>。<br />3. 清空所有快照：<strong>git stash clear</strong>（谨慎使用，不可恢复）。</td>
     </tr>
     <tr>
-        <td align="center" rowspan="4">16</td>
-        <td rowspan="4">git log</td>
+        <td align="center" rowspan="6">16</td>
+        <td rowspan="6">git log</td>
         <td>——</td>
         <td>查看本地仓库当前分支的完整提交历史（默认按时间倒序）</td>
         <td>1. 默认输出：提交哈希、作者、时间、提交信息。<br />2. 常用翻页：按<strong>空格</strong>下一页，<strong>q</strong>退出查看。<br />3. 限制显示条数：<strong>git log -5</strong>（仅显示最近5条提交）。</td>
@@ -255,6 +255,16 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
         <td>git log --oneline --graph --decorate</td>
         <td>以精简图形化格式展示提交历史（分支走向+提交信息+标签）</td>
         <td>1. --oneline：单行显示（提交哈希前7位+信息）。<br />2. --graph：绘制分支合并的ASCII图形。<br />3. --decorate：显示提交关联的分支/标签信息。</td>
+    </tr>
+    <tr>
+        <td>git log --pretty=oneline</td>
+        <td>单行显示完整提交历史（完整哈希值+提交信息）</td>
+        <td>区别于--oneline：--pretty=oneline显示完整哈希，--oneline仅显示前7位哈希。</td>
+    </tr>
+    <tr>
+        <td>git log --graph --pretty=oneline --abbrev-commit</td>
+        <td>图形化展示分支走向+单行精简提交信息（缩写哈希）</td>
+        <td>1. --abbrev-commit：显示缩写的提交哈希（默认7位）。<br />2. 最常用的提交历史查看组合命令之一，直观展示分支合并关系。</td>
     </tr>
     <tr>
         <td>git log main..origin/main</td>
@@ -267,8 +277,8 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
         <td>1. 区别于普通git log &lt;file-name&gt;：普通方式会中断重命名后的记录，--follow可追踪完整历史。<br />3. 配合--oneline使用更精简：<strong>git log --oneline --follow demo.txt</strong>。</td>
     </tr>
     <tr>
-        <td align="center" rowspan="4">17</td>
-        <td rowspan="4">git reset</td>
+        <td align="center" rowspan="5">17</td>
+        <td rowspan="5">git reset</td>
         <td>git reset HEAD &lt;file-name&gt; / .</td>
         <td>将指定文件/所有文件从暂存区撤回至工作区（取消git add）</td>
         <td>1. git reset HEAD demo.txt：撤回demo.txt。<br />2. git reset HEAD .：撤回所有暂存区文件。<br />3. 仅撤回暂存区，工作区修改保留。</td>
@@ -276,7 +286,12 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
     <tr>
         <td>git reset --hard HEAD~1</td>
         <td>硬重置到上一个提交版本，清空工作区+暂存区修改</td>
-        <td>1. HEAD~1：上一个提交（HEAD~2是上上个）。<br />2. 危险操作：未提交的修改会被永久删除。<br />3. 谨慎使用，建议先git stash暂存修改。</td>
+        <td>1. HEAD~1：上一个提交（HEAD~2是上上个）。<br />2. 危险操作：未提交的修改会被永久删除。<br />3. 谨慎使用，建议先git stash暂存修改。<br />3. <strong>--hard</strong>：会回退到目标版本的已提交状态。</td>
+    </tr>
+    <tr>
+        <td>git reset --hard HEAD^</td>
+        <td>硬重置到上一个提交版本（与HEAD~1等价）</td>
+        <td>^ 表示上一个版本，^^ 表示上上个版本，依次类推。</td>
     </tr>
     <tr>
         <td>git reset --hard HEAD@{1}</td>
@@ -284,9 +299,9 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
         <td>1. HEAD@{1}：通过git reflog查看的历史HEAD记录。<br />2. 适用场景：恢复误操作的reset/merge/rebase。<br />3. 需先执行git reflog获取历史记录。</td>
     </tr>
     <tr>
-        <td>git reset [--soft] HEAD~1</td>
-        <td>软重置到上一个提交版本，保留工作区+暂存区修改</td>
-        <td>1. --soft：仅撤销提交，修改保留在暂存区.<br />2. 无参数（默认--mixed）：撤销提交+撤回暂存区，修改保留在工作区。<br />3. 适用场景：合并多个提交（修改上一次提交）。</td>
+        <td>git reset [ /--mixed]/[--soft] HEAD~1</td>
+        <td>混合重置/软重置到上一个提交版本，修改保留在工作区（默认模式）/保留工作区+暂存区修改</td>
+        <td>1. <strong>--soft</strong>：仅撤销提交，修改保留在暂存区，即回退到上个版本的未提交状态，例如：git reset --soft HEAD~1。<br />2. 默认无参数（<strong>--mixed</strong>）：撤销提交+撤回暂存区，修改保留在工作区，即回退到上个版本已添加但未提交的状态，暂存区清空，工作区保留修改，例如：git reset --mixed HEAD~1。<br />3. 适用场景：合并多个提交（修改上一次提交）。</td>
     </tr>
     <tr>
         <td align="center" rowspan="2">18</td>
@@ -355,6 +370,56 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
         <td>git show [&lt;commit-hash&gt;/&lt;branch-name&gt;/&lt;tag-name&gt;]</td>
         <td>查看最新提交/指定提交/分支/标签的详细信息（含修改内容、作者、时间等）</td>
         <td>1. 无参数执行git show：查看最新一次提交（HEAD）的详细信息。<br />2. 查看指定提交：git show abc1234（abc1234为提交哈希前7位）。<br />3. 查看分支最新提交：git show dev（等价于git show dev@{0}）。<br />4. 查看标签对应提交：git show v1.0.0（显示标签信息+提交详情）。<br />5. 仅看文件修改：<strong>git show abc1234 -- demo.txt</strong>（只显示该提交中demo.txt的修改内容）。</td>
+    </tr>
+    <tr>
+        <td align="center">27</td>
+        <td>git checkout</td>
+        <td>git checkout -- &lt;file-name&gt;</td>
+        <td>放弃/撤销工作区中指定文件的所有修改（旧版恢复命令）</td>
+        <td>1. 示例：git checkout -- readme.txt。<br />2. 两种恢复场景：<br /> - 文件仅修改未暂存：恢复到与版本库一致的状态；<br /> - 文件已暂存后又修改：恢复到暂存后的状态；<br />3. 本质是用版本库版本替换工作区版本，修改/删除均可一键还原。</td>
+    </tr>
+    <tr>
+        <td align="center">28</td>
+        <td>git check-ignore</td>
+        <td>git check-ignore -v &lt;file-name&gt;</td>
+        <td>检查指定文件是否被Git忽略（-v参数显示忽略规则）</td>
+        <td>示例：git check-ignore -v App.class（查看App.class被忽略的具体规则和配置文件）。</td>
+    </tr>
+    <tr>
+        <td align="center">29</td>
+        <td>git cherry-pick</td>
+        <td><strong>git cherry-pick &lt;commit-hash&gt;</strong></td>
+        <td>复制指定提交的修改到当前分支，生成新提交</td>
+        <td>1. 核心场景：在master分支修复的bug，复制到dev分支（避免重复开发）。<br />2. 示例：git cherry-pick 8a7b9c0（将8a7b9c0提交的修改复制到当前分支）。<br />3. 若有冲突，解决后执行git cherry-pick --continue；放弃执行git cherry-pick --abort。</td>
+    </tr>
+    <tr>
+        <td align="center" rowspan="4">30</td>
+        <td rowspan="4">git tag</td>
+        <td>git tag &lt;tag-name&gt;</td>
+        <td>创建轻量标签（仅记录提交哈希，无附加信息）</td>
+        <td>示例：git tag v1.0.0（为当前最新提交创建v1.0.0标签）。</td>
+    </tr>
+    <tr>
+        <td>git tag</td>
+        <td>列出本地所有标签（按字母序排列）</td>
+        <td>1. 查看标签详细信息：git show v1.0.0。<br />2. 按版本号排序：git tag -l --sort=version:refname。</td>
+    </tr>
+    <tr>
+        <td>git tag -a &lt;tag-name&gt; -m "tag message"</td>
+        <td>创建附注标签（含作者、时间、备注等完整信息）</td>
+        <td>1. -a（annotated）：创建附注标签，推荐用于正式版本标记。<br />2. 示例：git tag -a v1.0.0 -m "正式发布v1.0.0版本"。</td>
+    </tr>
+    <tr>
+        <td>git tag -d &lt;tag-name&gt;</td>
+        <td>删除本地指定标签</td>
+        <td>示例：git tag -d v0.1（删除本地v0.1标签）。<br />删除远程标签：git push origin --delete v0.1。</td>
+    </tr>
+    <tr>
+        <td align="center">30</td>
+        <td>.gitignore</td>
+        <td>——</td>
+        <td>Git忽略文件配置文件，指定无需纳入版本控制的文件/目录</td>
+        <td>1. 配置规则：每行一个规则，如.class（忽略所有.class文件）、logs/（忽略logs目录）；例外规则：!App.class（不忽略App.class，覆盖*.class规则）；<br />2. 检查忽略规则：git check-ignore -v App.class（查看App.class被忽略的原因）；<br />3. 生效范围：需放在仓库根目录，提交到版本库后对所有协作者生效。</td>
     </tr>
 </table>
 
@@ -442,7 +507,15 @@ Git 的工作流程分为四个主要部分：
 
 Git 的文件状态转换流程：未跟踪（Untracked）、已跟踪（Tracked）、已修改（Modified）、已暂存（Staged）、已提交（Committed）
 
-### 六、总结
+### 六、Git 配置文件说明
+
+1. .git/config：本地仓库专属配置文件，存储当前仓库的分支跟踪关系、远程仓库地址等本地配置，优先级高于全局配置。
+    - 查看方式：直接打开 .git/config 文件或执行 git config --local --list。
+    - 编辑方式：手动修改文件或执行 git config --local --edit。
+2. ~/.gitconfig（全局配置文件）：存储所有仓库共用的全局配置（如用户名、别名、编辑器等）。
+3. /etc/gitconfig（系统配置文件）：系统级配置，对所有用户生效（需管理员权限修改）。
+
+### 七、总结
 
 - 跟踪关系是本地分支与**一个远程分支**的固定关联，临时拉取其他远程内容不会改变它。
 - 无参数的 `git pull`/`git push` 始终以**当前分支已建立的跟踪关系**为目标，与临时拉取的其他远程仓库无关。
@@ -457,5 +530,7 @@ PS：
 
 1. git - 简明指南：https://rogerdudler.github.io/git-guide/index.zh.html
 2. git reference：https://git-scm.com/docs
-3. git cheat sheet：https://www.runoob.com/manual/github-git-cheat-sheet.pdf
-4. **git tutorial of runoob** (git基本操作命令) ：https://www.runoob.com/git/git-basic-operations.html
+3. github git cheat sheet：https://www.runoob.com/manual/github-git-cheat-sheet.pdf
+4. git cheat sheet：https://liaoxuefeng.com/books/git/conclusion/git-cheat-sheet.pdf
+5. liaoxuefeng git 教程：https://liaoxuefeng.com/books/git/branch/rebase/index.html
+6. **git tutorial of runoob** (git基本操作命令) ：https://www.runoob.com/git/git-basic-operations.html
