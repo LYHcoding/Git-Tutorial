@@ -31,7 +31,24 @@ git commit -m 'commit message'
 git push -u origin <branch-name>  | git push origin <branch-name>  | git push
 ```
 
+### Common Git Command
 
+```bash
+# 拉取远程仓库所有分支，并在本地创建切换本地没有的远程分支
+git fetch
+git checkout <branch-name>
+
+# git操作日志单行输出查看
+git log --pretty=oneline
+
+# git软重置回退到上个版本的未提交状态
+git reset --soft HEAD~1
+
+# 查看工作区和版本库里面最新版本指定文件的区别
+git diff HEAD -- .\README.md
+
+# 
+```
 
 ### Git Command List
 
@@ -232,7 +249,7 @@ git push -u origin <branch-name>  | git push origin <branch-name>  | git push
     <tr>
         <td>git stash pop</td>
         <td>恢复最近一次stash的更改，并删除该临时快照</td>
-        <td>1. 恢复指定快照：<strong>git stash pop stash@{0}</strong>（stash@{0}为最近一次）。<br />2. 仅恢复不删除可用：<strong>git stash apply</strong>。</td>
+        <td>1. 恢复指定快照：<strong>git stash pop stash@{0}</strong>（stash@{0}为最近一次）。<br />2. 仅恢复不删除可用：<strong>git stash apply</strong>。<br />3. 仅恢复不删除可用的指定stash命令：git stash apply stash@{0}。</td>
     </tr>
     <tr>
         <td>git stash list</td>
